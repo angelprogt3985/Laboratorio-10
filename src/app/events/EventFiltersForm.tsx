@@ -44,6 +44,12 @@ export function EventFiltersForm({ currentFilters }: EventFiltersFormProps): Rea
   const [category, setCategory] = useState(currentFilters.category ?? '');
   const [status, setStatus] = useState(currentFilters.status ?? '');
   const [priceMax, setPriceMax] = useState(currentFilters.priceMax?.toString() ?? '');
+  useEffect(() => {
+  setCategory(currentFilters.category ?? '');
+  setStatus(currentFilters.status ?? '');
+  setPriceMax(currentFilters.priceMax?.toString() ?? '');
+  setSearchTerm(currentFilters.search ?? '');
+}, [currentFilters.category, currentFilters.status, currentFilters.priceMax, currentFilters.search]);
 
   // Valor debounced (retrasado 500ms)
   const debouncedSearch = useDebounce(searchTerm, 500);
@@ -52,7 +58,7 @@ export function EventFiltersForm({ currentFilters }: EventFiltersFormProps): Rea
   const isFirstRender = useRef(true);
 
   const hasFilters =
-    currentFilters.search || currentFilters.category || currentFilters.priceMax || currentFilters.status;
+    currentFilters.search || currentFilters.category || currentFilters.priceMax !== undefined || currentFilters.status;
 
   // Efecto para auto-submit cuando cambia el texto debounced
   useEffect(() => {
