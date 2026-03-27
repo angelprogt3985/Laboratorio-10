@@ -41,6 +41,9 @@ export function EventFiltersForm({ currentFilters }: EventFiltersFormProps): Rea
 
   // Estado local para el input de búsqueda
   const [searchTerm, setSearchTerm] = useState(currentFilters.search ?? '');
+  const [category, setCategory] = useState(currentFilters.category ?? '');
+  const [status, setStatus] = useState(currentFilters.status ?? '');
+  const [priceMax, setPriceMax] = useState(currentFilters.priceMax?.toString() ?? '');
 
   // Valor debounced (retrasado 500ms)
   const debouncedSearch = useDebounce(searchTerm, 500);
@@ -63,10 +66,6 @@ export function EventFiltersForm({ currentFilters }: EventFiltersFormProps): Rea
     formRef.current?.requestSubmit();
   }, [debouncedSearch]);
 
-  // Handler para auto-submit de selects
-  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    e.currentTarget.form?.requestSubmit(); // Usamos evento directo para select
-  };
 
   // Handler para input de búsqueda (actualiza estado local)
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +85,7 @@ export function EventFiltersForm({ currentFilters }: EventFiltersFormProps): Rea
               placeholder="Buscar eventos..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="pl-9"
+              className={`pl-9 ${searchTerm ? 'border-primary ring-1 ring-primary/20' : ''}`}
             />
           </div>
           {/* Botón de búsqueda (opcional pero bueno para accesibilidad) */}
@@ -98,8 +97,11 @@ export function EventFiltersForm({ currentFilters }: EventFiltersFormProps): Rea
           {/* Categoría */}
           <select
             name="category"
-            defaultValue={currentFilters.category ?? ''}
-            onChange={handleFilterChange}
+            value={category}                          
+            onChange={(e) => {
+              setCategory(e.target.value);            
+              e.currentTarget.form?.requestSubmit();
+            }}
             className="h-10 w-[180px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
           >
             <option value="">Todas las categorías</option>
@@ -113,8 +115,11 @@ export function EventFiltersForm({ currentFilters }: EventFiltersFormProps): Rea
           {/* Status */}
           <select
             name="status"
-            defaultValue={currentFilters.status ?? ''}
-            onChange={handleFilterChange}
+            value={status}                            
+            onChange={(e) => {
+              setStatus(e.target.value);
+              e.currentTarget.form?.requestSubmit();
+            }}           
             className="h-10 w-[180px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
           >
             <option value="">Todos los estados</option>
@@ -128,8 +133,11 @@ export function EventFiltersForm({ currentFilters }: EventFiltersFormProps): Rea
           {/* Precio maximo */}
           <select
             name="priceMax"
-            defaultValue={currentFilters.priceMax?.toString() ?? ''}
-            onChange={handleFilterChange}
+            value={priceMax}                          
+            onChange={(e) => {
+              setPriceMax(e.target.value);
+              e.currentTarget.form?.requestSubmit();
+            }}
             className="h-10 w-[180px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
           >
             <option value="">Cualquier precio</option>
