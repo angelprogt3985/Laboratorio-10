@@ -18,11 +18,12 @@
 
 'use client';
 
-import { useOptimistic, useTransition } from 'react';
+import { useOptimistic, useTransition, useState  } from 'react';
 import { Button } from '@/components/ui/button';
 import { registerForEventAction } from '@/actions/eventActions';
 import { Loader2, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
 
 interface RegisterButtonProps {
   eventId: string;
@@ -49,6 +50,8 @@ export function RegisterButton({
    * isPending indica si hay una transición en progreso.
    */
   const [isPending, startTransition] = useTransition();
+  const [feedback, setFeedback] = useState<'success' | 'error' | null>(null);
+
 
   /**
    * useOptimistic crea un estado optimista.
@@ -72,6 +75,7 @@ export function RegisterButton({
   async function handleRegister(): Promise<void> {
     // 1. Actualización optimista inmediata
     addOptimistic('register');
+    setFeedback(null);
 
     // 2. Ejecutar Server Action en una transición
     startTransition(async () => {
@@ -81,19 +85,34 @@ export function RegisterButton({
         // Si falla, podríamos mostrar un toast de error
         // El estado optimista se revierte automáticamente
         console.error('Error al registrar:', result.message);
+        setFeedback('error');
+      } else {
+          setFeedback('success');
       }
     });
   }
 
   // Si ya se registró (optimísticamente)
   if (showRegistered) {
-    return (
+  return (
+    <div className="space-y-2">
       <Button variant="secondary" disabled className="w-full gap-2">
         <CheckCircle className="h-4 w-4" />
         ¡Registrado!
       </Button>
-    );
-  }
+      {feedback === 'success' && (
+        <p className="text-sm text-center text-emerald-600 font-medium">
+          ✓ Registro confirmado exitosamente
+        </p>
+      )}
+      {feedback === 'error' && (
+        <p className="text-sm text-center text-red-500 font-medium">
+          ✕ Error al registrar. Intenta de nuevo.
+        </p>
+      )}
+    </div>
+  );
+}
 
   // Si no hay plazas
   if (!canRegister) {
