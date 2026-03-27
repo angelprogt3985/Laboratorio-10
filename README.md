@@ -5,3 +5,5 @@ Se convirtió EventFiltersForm a Client Component para mejorar la UX manteniendo
 # Parte 2 - Laboratorio 10 - Angel Camargo
 
 Para la parte 2 se implementó useOptimistic de React 19 en RegisterButton.tsx para dar feedback inmediato al usuario al registrarse en un evento. Al hacer clic, el contador de plazas disponibles se reduce en 1 instantáneamente sin esperar al servidor. Se usa useTransition junto con startTransition para envolver tanto el addOptimistic como la llamada al Server Action registerForEventAction, ya que useOptimistic requiere ejecutarse dentro de una transición. Si el servidor falla, React revierte automáticamente el estado optimista al valor original. Se agregó estado de feedback para mostrar un mensaje de confirmación si el registro fue exitoso o un mensaje de error si falló. El botón se deshabilita mientras la transición está pendiente y muestra un spinner, y una vez registrado cambia a un estado de "¡Registrado!" con ícono de check que no se puede volver a clickear.
+
+Videos de demostración: https://drive.google.com/drive/folders/1nMiS9yVMeSTAFp9bjI4eSpmsAgALiidL?usp=sharing
